@@ -15,7 +15,7 @@ module.exports = function (app, passport) {
 
 	var clickHandler = new ClickHandler();
 	
-	app.route('/timeStamp/*')
+	app.route('/timeStamp*')
 		.get(function(req,res){
 			var monthNames = ["January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"
@@ -25,11 +25,12 @@ module.exports = function (app, passport) {
 			queryTime = decodeURI(queryTime);
 			var d;
 			var jsonObj = {"unix":null,"narutal":null};
-			if(isNaN(queryTime)){
+			if(isNaN(queryTime) ||queryTime ==""){
 				//console.log(queryTime);
 				var timestamp=Date.parse(queryTime);
 				if(isNaN(timestamp)){
 					res.jsonp(jsonObj);
+					return;
 				}
 				else{
 					d=new Date(timestamp);
