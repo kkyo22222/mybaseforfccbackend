@@ -14,6 +14,35 @@ module.exports = function (app, passport) {
 	}
 
 	var clickHandler = new ClickHandler();
+	
+	app.route('/timeStamp/*')
+		.get(function(req,res){
+			var monthNames = ["January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+];
+
+			var queryTime = req.path.slice(11);
+			queryTime = decodeURI(queryTime);
+			var d;
+			var jsonObj = {"unix":null,"narutal":null};
+			if(isNaN(queryTime)){
+				//console.log(queryTime);
+				var timestamp=Date.parse(queryTime);
+				if(isNaN(timestamp)){
+					res.jsonp(jsonObj);
+				}
+				else{
+					d=new Date(timestamp);
+				}
+			}
+			else{
+				d = new Date(parseInt(queryTime)*1000);
+			}
+			//console.log(d);
+			jsonObj.unix=d.getTime()/1000;
+			jsonObj.narutal=monthNames[d.getMonth()]+" "+d.getDate()+", "+d.getFullYear();
+			res.jsonp(jsonObj);
+		});
 
 	app.route('/')
 		.get(isLoggedIn, function (req, res) {
